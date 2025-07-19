@@ -2,6 +2,7 @@ import axios from "axios";
 
 
 const registerUser = (data) => {
+   console.log("Registering user with data:", data);
   return axios.post("/api/v1/user/register", data);
 };
 
