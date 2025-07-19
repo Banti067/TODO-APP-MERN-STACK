@@ -7,7 +7,7 @@ const connectDB = require("./config/mongodb");
 //env config
 dotenv.config();
 
-//DB CONNECTION
+//MONGODB CONNECTION
 connectDB();
 
 // rest object
