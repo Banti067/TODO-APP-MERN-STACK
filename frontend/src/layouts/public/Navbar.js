@@ -20,23 +20,16 @@ const Navbar = () => {
 
   return (
     <nav className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-md">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center text-white">
-        <h2 className="text-xl font-bold tracking-wide flex items-center gap-2">
-          <i className="fa-solid fa-clipboard-list"></i> My ToDo App
-        </h2>
+      <div className="max-w-7xl mx-auto px-4 py-5 flex justify-between items-center text-white">
+        <Link to="/">
+  <h2 className="text-xl font-bold tracking-wide flex items-center gap-2 cursor-pointer">
+    <i className="fa-solid fa-clipboard-list"></i> My ToDo App
+  </h2>
+</Link>
 
         {/* Desktop Menu */}
         <ul className="hidden md:flex space-x-6 font-medium items-center">
-          <li>
-            <Link to="/home" className="hover:text-yellow-200 transition">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link to="/todoList" className="hover:text-yellow-200 transition">
-              My Todo List
-            </Link>
-          </li>
+
           {!username ? (
             <>
               <li>
@@ -86,16 +79,6 @@ const Navbar = () => {
       {menuOpen && (
         <div className="md:hidden bg-indigo-700 px-4 pb-4 text-white">
           <ul className="space-y-3">
-            <li>
-              <Link to="/home" onClick={() => setMenuOpen(false)}>
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link to="/todoList" onClick={() => setMenuOpen(false)}>
-                My Todo List
-              </Link>
-            </li>
             {!username ? (
               <>
                 <li>
