@@ -17,10 +17,11 @@ const app = express();
 app.use(express.json());
 app.use(cors({
   origin: [
-    "http://localhost:10000",
+    "http://localhost:3000",
     "https://todo-app-mern-stack-frontend.vercel.app"
   ],
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
 }));
 app.use(morgan("dev"));
