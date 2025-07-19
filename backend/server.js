@@ -4,41 +4,46 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const connectDB = require("./config/mongodb");
 
-//env config
+// Load env variables
 dotenv.config();
 
-//MONGODB CONNECTION
+// Connect to MongoDB
 connectDB();
 
-// rest object
+// Initialize app
 const app = express();
 
-//middlewares
+// Dynamic CORS for all *.vercel.app and localhost
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (
+        !origin ||                            
+        origin.includes("localhost") ||        
+        /\.vercel\.app$/.test(origin)         
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS not allowed for this origin: " + origin));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true
+  })
+);
+
+// Middleware
 app.use(express.json());
-app.use(cors({
-  origin: [
-    "http://localhost:3000",
-    "https://todo-app-mern-stack-frontend.vercel.app"
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
-}));
 app.use(morgan("dev"));
 
-//routes
+// Routes
 app.use("/api/v1/user", require("./routes/userRoutes"));
-// app.use("/api/v1/todo", require("./routes/todoRoute"));
 app.use("/api/v1/test", require("./routes/testRoutes"));
+// app.use("/api/v1/todo", require("./routes/todoRoute")); // Enable if needed
 
-
-//port
-const PORT = process.env.PORT || 10000
-
-// //listen
+// Server
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
-  console.log(
-    `Node Server Running on ${process.env.DEV_MODE} mode on Port no ${PORT}`
-   
-  );
+  console.log(`✅ Server running in ${process.env.DEV_MODE} mode on port ${PORT}`);
 });
