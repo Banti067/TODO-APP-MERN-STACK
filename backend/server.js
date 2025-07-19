@@ -25,7 +25,7 @@ app.use("/api/v1/test", require("./routes/testRoutes"));
 
 
 //port
-const PORT =  process.env.PORT || 2025 ;
+const PORT =  process.env.MONGO_DB_URL || 2025 ;
 
 // //listen
 app.listen(PORT, () => {
