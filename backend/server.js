@@ -15,7 +15,11 @@ const app = express();
 
 //middlewares
 app.use(express.json());
-app.use(cors());
+const cors = require("cors");
+app.use(cors({
+  origin: "*", // OR better: ['http://localhost:5173', 'https://todo-app-mern-stack-frontend.vercel.app']
+  credentials: true
+}));
 app.use(morgan("dev"));
 
 //routes
