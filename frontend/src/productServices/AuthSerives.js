@@ -1,9 +1,11 @@
 import axios from "axios";
 
 // Use full backend API URL
-const API = import.meta.env.MODE === "development"
-  ? "http://localhost:2025"
-  : "https://todo-app-mern-stack-prnf.onrender.com";
+// const API = import.meta.env.MODE === "development"
+//   ? "http://localhost:2025"
+//   : "https://todo-app-mern-stack-prnf.onrender.com";
+
+const API = process.env.REACT_APP_API_URL;
 
 const registerUser = (data) => {
   console.log("Registering user with data:", data);
@@ -11,6 +13,7 @@ const registerUser = (data) => {
 };
 
 const loginUser = (data) => {
+  console.log("login user with data:", data);
   return axios.post(`${API}/api/v1/user/login`, data);
 };
 

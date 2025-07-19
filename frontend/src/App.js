@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import PublicLayout from "./layouts/public/index";
 import Landing from "./pages/Home/HomePage";
 import Register from "./pages/Auth/Register";
@@ -8,26 +8,24 @@ import SecureRoute from "./components/protectedRoutes/RouteProtected";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* Public layout */}
-        <Route element={<PublicLayout />}>
-          <Route path="/" element={<Landing />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-        </Route>
+    <Routes>
+      {/* Public layout */}
+      <Route element={<PublicLayout />}>
+        <Route path="/" element={<Landing />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+      </Route>
 
-        {/* Protected dashboard route */}
-        <Route
-          path="/"
-          element={
-            <SecureRoute>
-              <TodoDashboard />
-            </SecureRoute>
-          }
-        />
-      </Routes>
-    </Router>
+      {/* Protected dashboard route */}
+      <Route
+        path="/dashboard"
+        element={
+          <SecureRoute>
+            <TodoDashboard />
+          </SecureRoute>
+        }
+      />
+    </Routes>
   );
 }
 
