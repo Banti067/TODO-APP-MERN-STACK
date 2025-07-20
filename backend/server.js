@@ -40,7 +40,7 @@ app.use(morgan("dev"));
 // Routes
 app.use("/api/v1/user", require("./routes/userRoutes"));
 app.use("/api/v1/test", require("./routes/testRoutes"));
-// app.use("/api/v1/todo", require("./routes/todoRoute")); // Enable if needed
+app.use("/api/v1/todo", require("./routes/todoRoutes")); 
 
 // Server
 const PORT = process.env.PORT || 10000;
