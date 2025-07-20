@@ -13,9 +13,9 @@ const Login = () => {
     try {
       e.preventDefault();
       const data = { email, password };
-      const res = await AuthServices.loginUSer(data);
+      const res = await AuthServices.loginUser(data);
       toast.success(res.data.message);
-      navigate("/home");
+      navigate("/dashboard");
       localStorage.setItem("todoapp", JSON.stringify(res.data));
     } catch (err) {
       toast.error(getErrorMessage(err));

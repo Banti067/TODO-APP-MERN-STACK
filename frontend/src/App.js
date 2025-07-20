@@ -20,9 +20,9 @@ function App() {
       <Route
         path="/dashboard"
         element={
-          <SecureRoute>
+          // <SecureRoute>
             <TodoDashboard />
-          </SecureRoute>
+          // </SecureRoute>
         }
       />
     </Routes>

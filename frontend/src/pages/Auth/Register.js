@@ -16,6 +16,7 @@ const Register = () => {
       const data = { email, password, username };
       const res = await AuthServices.registerUser(data);
       toast.success(res.data.message);
+       localStorage.setItem("todoapp", JSON.stringify(res.data));
       navigate("/login");
     } catch (err) {
       toast.error(getErrorMessage(err));
