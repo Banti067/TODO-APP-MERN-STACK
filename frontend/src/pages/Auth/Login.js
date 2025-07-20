@@ -14,9 +14,11 @@ const Login = () => {
       e.preventDefault();
       const data = { email, password };
       const res = await AuthServices.loginUser(data);
-      toast.success(res.data.message);
-      navigate("/dashboard");
-      localStorage.setItem("todoapp", JSON.stringify(res.data));
+     toast.success(res.data.message);
+    // ✅ Save user data first
+    localStorage.setItem("todoapp", JSON.stringify(res.data));
+    // ✅ Then navigate
+    navigate("/dashboard");
     } catch (err) {
       toast.error(getErrorMessage(err));
     }
