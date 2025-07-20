@@ -4,7 +4,7 @@ const todoModel = require("../models/todoModels");
 const createTodoController = async (req, res) => {
   try {
     const { title, description } = req.body;
-    const createdBy = req.user._id;
+    const createdBy = req.user._id; // ✅ use from JWT
 
     if (!title || !description) {
       return res.status(400).send({
@@ -22,14 +22,16 @@ const createTodoController = async (req, res) => {
       result,
     });
   } catch (error) {
-    console.error("Create Todo Error:", error);
+    console.error("Create Todo Error:", error); // 👈 This logs in server console
+
     res.status(500).send({
       success: false,
       message: "Error in Create Todo API",
-      error,
+      error: error.message, // 👈 Show actual error
     });
   }
 };
+
 
 // GET TODOS FOR USER
 const getTodoController = async (req, res) => {
