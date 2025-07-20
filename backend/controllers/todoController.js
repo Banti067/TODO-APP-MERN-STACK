@@ -72,7 +72,14 @@ const deleteTodoController = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const todo = await todoModel.findByIdAndDelete(id);
+    if (!id || id.length !== 24) {
+      return res.status(400).send({
+        success: false,
+        message: "Invalid or missing task ID",
+      });
+    }
+
+    const todo = await todoModel.findById(id);
 
     if (!todo) {
       return res.status(404).send({
@@ -80,6 +87,16 @@ const deleteTodoController = async (req, res) => {
         message: "No task found with this ID",
       });
     }
+
+    // 🛡️ Secure ownership check
+    if (todo.createdBy.toString() !== req.user._id) {
+      return res.status(403).send({
+        success: false,
+        message: "Forbidden: You are not allowed to delete this task",
+      });
+    }
+
+    await todo.deleteOne(); // OR await todoModel.findByIdAndDelete(id)
 
     res.status(200).send({
       success: true,
@@ -90,7 +107,7 @@ const deleteTodoController = async (req, res) => {
     res.status(500).send({
       success: false,
       message: "Error in Delete Todo API",
-      error,
+      error: error.message,
     });
   }
 };
@@ -101,11 +118,14 @@ const updateTodoController = async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
 
-    const todo = await todoModel.findByIdAndUpdate(
-      id,
-      { $set: updates },
-      { new: true }
-    );
+    if (!id || id.length !== 24) {
+      return res.status(400).send({
+        success: false,
+        message: "Invalid or missing task ID",
+      });
+    }
+
+    const todo = await todoModel.findById(id);
 
     if (!todo) {
       return res.status(404).send({
@@ -114,20 +134,36 @@ const updateTodoController = async (req, res) => {
       });
     }
 
+    // 🛡️ Ownership check
+    if (todo.createdBy.toString() !== req.user._id) {
+      return res.status(403).send({
+        success: false,
+        message: "Forbidden: You are not allowed to update this task",
+      });
+    }
+
+    // Perform update
+    const updatedTodo = await todoModel.findByIdAndUpdate(
+      id,
+      { $set: updates },
+      { new: true }
+    );
+
     res.status(200).send({
       success: true,
       message: "Your task has been updated",
-      todo,
+      todo: updatedTodo,
     });
   } catch (error) {
     console.error("Update Todo Error:", error);
     res.status(500).send({
       success: false,
       message: "Error in Update Todo API",
-      error,
+      error: error.message,
     });
   }
 };
+
 
 module.exports = {
   createTodoController,
