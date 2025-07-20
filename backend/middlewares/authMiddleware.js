@@ -2,33 +2,32 @@ const JWT = require("jsonwebtoken");
 
 module.exports = async (req, res, next) => {
   try {
-    // Get token from Authorization header
-    const token = req.headers["authorization"]?.split(" ")[1];
-
-    if (!token) {
+    // 1. Check if Authorization header exists and has Bearer token
+    const authHeader = req.headers["authorization"];
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).send({
         success: false,
         message: "Please provide Auth token",
       });
     }
 
-    JWT.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-      if (err) {
-        return res.status(401).send({
-          success: false,
-          message: "Un-Authorize user",
-        });
-      } else {
-        req.user = decoded; // set user info in request
-        next();
-      }
-    });
+    // 2. Extract token
+    const token = authHeader.split(" ")[1];
+
+    // 3. Verify token
+    const decoded = JWT.verify(token, process.env.JWT_SECRET);
+
+    // 4. Store user info in request object
+    req.user = decoded;
+
+    // 5. Call next middleware/controller
+    next();
   } catch (error) {
-    console.log("Middleware error:", error);
-    res.status(400).send({
+    console.log("JWT Middleware Error:", error.message);
+    return res.status(401).send({
       success: false,
-      message: "Auth middleware error",
-      error,
+      message: "Unauthorized or invalid token",
+      error: error.message,
     });
   }
 };
