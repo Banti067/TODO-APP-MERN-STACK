@@ -36,7 +36,7 @@ const createTodoController = async (req, res) => {
 // GET TODOS FOR USER
 const getTodoController = async (req, res) => {
   try {
-    const { userId } = req.params;
+    const userId = req.user._id;
 
     // Secure check - ensure authenticated user matches request
     if (req.user._id !== userId) {
