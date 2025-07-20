@@ -1,5 +1,5 @@
-const todoModel = require("../models/todoModels");
 const mongoose = require("mongoose");
+const todoModel = require("../models/todoModels");
 
 // CREATE TODO
 const createTodoController = async (req, res) => {
