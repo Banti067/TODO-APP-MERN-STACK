@@ -13,7 +13,7 @@ const createTodoController = async (req, res) => {
       });
     }
 
-    const todo = new todoModel({ title, description, createdBy });
+    const todo = new todoModel({ title, description, createdBy , isCompleted, });
     const result = await todo.save();
 
     res.status(201).send({
