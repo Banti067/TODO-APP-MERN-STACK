@@ -37,20 +37,28 @@ const createTodoController = async (req, res) => {
 
 
 
-// GET TODOS FOR USER
 const getTodoController = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const requestedUserId = req.params.id;
+    const loggedInUserId = req.user._id;
 
-    // Secure check - ensure authenticated user matches request
-    if (req.user._id !== userId) {
+    // Validate ObjectId
+    if (!mongoose.Types.ObjectId.isValid(requestedUserId)) {
+      return res.status(400).send({
+        success: false,
+        message: "Invalid user ID",
+      });
+    }
+
+    // Secure check
+    if (requestedUserId !== loggedInUserId.toString()) {
       return res.status(403).send({
         success: false,
         message: "Forbidden: You cannot access other users' todos",
       });
     }
 
-    const todos = await todoModel.find({ createdBy: userId });
+    const todos = await todoModel.find({ createdBy: requestedUserId });
 
     res.status(200).send({
       success: true,
@@ -62,7 +70,7 @@ const getTodoController = async (req, res) => {
     res.status(500).send({
       success: false,
       message: "Error in Get Todo API",
-      error,
+      error: error.message,
     });
   }
 };
