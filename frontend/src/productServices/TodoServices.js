@@ -1,19 +1,18 @@
-import axios from "axios";
+// src/productServices/TodoServices.js
+import axios from "../utils/axiosConfig"; // ✅ Use the configured instance
 
-//get user token
-const user = JSON.parse(localStorage.getItem("todoapp"));
-
-//default auth header
-axios.defaults.headers.common["Authorization"] = `bearer ${user.token}`;
-
-//CRETE TODO
-const createTodo = (data) => {
+export const createTodo = (data) => {
   return axios.post("/todo/create", data);
 };
-//GET ALL TODO
-const getAllTodo = (id) => {
-  return axios.post(`/todo/getAll/${id}`);
+
+export const getAllTodos = (userId) => {
+  return axios.get(`/todo/user/${userId}`);
 };
 
-const TodoServices = { createTodo, getAllTodo };
-export default TodoServices;
+export const updateTodo = (id, data) => {
+  return axios.put(`/todo/${id}`, data);
+};
+
+export const deleteTodo = (id) => {
+  return axios.delete(`/todo/${id}`);
+};
