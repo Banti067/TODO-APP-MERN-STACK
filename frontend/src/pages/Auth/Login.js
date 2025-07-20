@@ -1,31 +1,61 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthServices from "../../productServices/AuthSerives";
-import toast from "react-hot-toast";
 import { getErrorMessage } from "../../utils/ErrorMessage";
+import BounceDialog from "../../components/BounceDialog"; // Make sure path is correct
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [popup, setPopup] = useState({
+    open: false,
+    isSuccess: false,
+    message: "",
+  });
+
   const navigate = useNavigate();
 
   const loginHandler = async (e) => {
+    e.preventDefault();
     try {
-      e.preventDefault();
       const data = { email, password };
       const res = await AuthServices.loginUser(data);
-     toast.success(res.data.message);
-    // ✅ Save user data first
-    localStorage.setItem("todoapp", JSON.stringify(res.data));
-    // ✅ Then navigate
-    navigate("/dashboard");
+      localStorage.setItem("todoapp", JSON.stringify(res.data));
+      setPopup({
+        open: true,
+        isSuccess: true,
+        message: res.data.message || "Login successful!",
+      });
     } catch (err) {
-      toast.error(getErrorMessage(err));
+      setPopup({
+        open: true,
+        isSuccess: false,
+        message: getErrorMessage(err),
+      });
+    }
+  };
+
+  const handlePopupClose = () => {
+    setPopup({ ...popup, open: false });
+    if (popup.isSuccess) {
+      navigate("/dashboard");
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] px-4 py-12">
+
+      {/* ✅ Animated Bounce Popup */}
+      <BounceDialog
+        open={popup.open}
+        onClose={handlePopupClose}
+        onAction={handlePopupClose}
+        isSuccess={popup.isSuccess}
+        message={popup.message}
+        buttonText={popup.isSuccess ? "Go to Dashboard" : "Try Again"}
+      />
+
+      {/* ✅ Login Form */}
       <form
         onSubmit={loginHandler}
         className="bg-white/10 backdrop-blur-lg p-8 rounded-2xl shadow-2xl w-full max-w-md text-white space-y-5 border border-white/10"
