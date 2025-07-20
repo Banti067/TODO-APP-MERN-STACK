@@ -72,7 +72,7 @@ const deleteTodoController = async (req, res) => {
   try {
     const { id } = req.params;
 
-    if (!id || id.length !== 24) {
+    if (!id) {
       return res.status(400).send({
         success: false,
         message: "Invalid or missing task ID",
@@ -88,15 +88,15 @@ const deleteTodoController = async (req, res) => {
       });
     }
 
-    // 🛡️ Secure ownership check
-    if (todo.createdBy.toString() !== req.user._id) {
+    // 🔐 Optional: Ensure the authenticated user owns this todo
+    if (!todo.createdBy || todo.createdBy.toString() !== req.user._id) {
       return res.status(403).send({
         success: false,
-        message: "Forbidden: You are not allowed to delete this task",
+        message: "Unauthorized to delete this task",
       });
     }
 
-    await todo.deleteOne(); // OR await todoModel.findByIdAndDelete(id)
+    await todoModel.findByIdAndDelete(id);
 
     res.status(200).send({
       success: true,
@@ -135,7 +135,7 @@ const updateTodoController = async (req, res) => {
     }
 
     // 🛡️ Ownership check
-    if (todo.createdBy.toString() !== req.user._id) {
+    if (!todo.createdBy || todo.createdBy.toString() !== req.user._id) {
       return res.status(403).send({
         success: false,
         message: "Forbidden: You are not allowed to update this task",
