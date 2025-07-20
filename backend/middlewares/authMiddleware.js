@@ -1,8 +1,8 @@
 const JWT = require("jsonwebtoken");
+const userModel = require("../models/userModels"); // adjust path as needed
 
 module.exports = async (req, res, next) => {
   try {
-    // 1. Check if Authorization header exists and has Bearer token
     const authHeader = req.headers["authorization"];
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).send({
@@ -11,16 +11,19 @@ module.exports = async (req, res, next) => {
       });
     }
 
-    // 2. Extract token
     const token = authHeader.split(" ")[1];
-
-    // 3. Verify token
     const decoded = JWT.verify(token, process.env.JWT_SECRET);
 
-    // 4. Store user info in request object
-    req.user = decoded;
+    // ✅ Get the full user from DB
+    const user = await userModel.findById(decoded._id).select("-password");
+    if (!user) {
+      return res.status(401).send({
+        success: false,
+        message: "User not found",
+      });
+    }
 
-    // 5. Call next middleware/controller
+    req.user = user;
     next();
   } catch (error) {
     console.log("JWT Middleware Error:", error.message);

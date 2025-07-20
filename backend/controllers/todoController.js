@@ -36,8 +36,6 @@ const createTodoController = async (req, res) => {
   }
 };
 
-
-
 const getTodoController = async (req, res) => {
   try {
     const requestedUserId = req.params.id;
@@ -75,6 +73,7 @@ const getTodoController = async (req, res) => {
     });
   }
 };
+
 
 // DELETE TODO
 const deleteTodoController = async (req, res) => {
