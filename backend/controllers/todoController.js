@@ -72,15 +72,16 @@ const deleteTodoController = async (req, res) => {
   try {
     const { id } = req.params;
 
-    if (!id) {
+    // Validate ObjectId format
+    if (!id || id.length !== 24) {
       return res.status(400).send({
         success: false,
         message: "Invalid or missing task ID",
       });
     }
 
+    // Check if the todo exists
     const todo = await todoModel.findById(id);
-
     if (!todo) {
       return res.status(404).send({
         success: false,
@@ -88,7 +89,7 @@ const deleteTodoController = async (req, res) => {
       });
     }
 
-    // 🔐 Optional: Ensure the authenticated user owns this todo
+    // Check if the authenticated user owns the todo
     if (!todo.createdBy || todo.createdBy.toString() !== req.user._id) {
       return res.status(403).send({
         success: false,
@@ -96,21 +97,23 @@ const deleteTodoController = async (req, res) => {
       });
     }
 
+    // Delete the task
     await todoModel.findByIdAndDelete(id);
 
-    res.status(200).send({
+    return res.status(200).send({
       success: true,
       message: "Your task has been deleted",
     });
   } catch (error) {
     console.error("Delete Todo Error:", error);
-    res.status(500).send({
+    return res.status(500).send({
       success: false,
       message: "Error in Delete Todo API",
       error: error.message,
     });
   }
 };
+
 
 // UPDATE TODO
 const updateTodoController = async (req, res) => {
