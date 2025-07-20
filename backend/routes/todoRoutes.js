@@ -16,9 +16,9 @@ router.post("/create", authMiddleware, createTodoController);
 router.get("/user/:userId", authMiddleware, getTodoController);
 
 
-router.delete("/:id", authMiddleware, deleteTodoController);
+router.delete("/delete/:id", authMiddleware, deleteTodoController);
 
 
-router.put("/:id", authMiddleware, updateTodoController);
+router.put("/update/:id", authMiddleware, updateTodoController);
 
 module.exports = router;
