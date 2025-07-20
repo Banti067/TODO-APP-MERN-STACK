@@ -129,6 +129,8 @@ const updateTodoController = async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
 
+    console.log("Update Todo Hit:", id, updates, req.user); // 🧪 debug log
+
     if (!id || id.length !== 24) {
       return res.status(400).send({
         success: false,
@@ -137,7 +139,6 @@ const updateTodoController = async (req, res) => {
     }
 
     const todo = await todoModel.findById(id);
-
     if (!todo) {
       return res.status(404).send({
         success: false,
@@ -145,7 +146,6 @@ const updateTodoController = async (req, res) => {
       });
     }
 
-    // 🛡️ Ownership check
     if (!todo.createdBy || todo.createdBy.toString() !== req.user._id) {
       return res.status(403).send({
         success: false,
@@ -153,12 +153,11 @@ const updateTodoController = async (req, res) => {
       });
     }
 
-    // Perform update
-    const updatedTodo = await todoModel.findByIdAndUpdate(
-      id,
-      { $set: updates },
-      { new: true }
-    );
+    // Filter out protected fields
+    const protectedFields = ["_id", "createdBy", "createdAt", "__v"];
+    protectedFields.forEach((field) => delete updates[field]);
+
+    const updatedTodo = await todoModel.findByIdAndUpdate(id, { $set: updates }, { new: true });
 
     res.status(200).send({
       success: true,
@@ -174,6 +173,7 @@ const updateTodoController = async (req, res) => {
     });
   }
 };
+
 
 
 module.exports = {
