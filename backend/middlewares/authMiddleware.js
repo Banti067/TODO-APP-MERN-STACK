@@ -23,7 +23,7 @@ module.exports = async (req, res, next) => {
       });
     }
 
-    req.user = user;
+    req.user = { _id: user._id.toString() };
     next();
   } catch (error) {
     console.log("JWT Middleware Error:", error.message);
