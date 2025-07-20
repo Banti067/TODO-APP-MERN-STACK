@@ -57,7 +57,7 @@ const TodoCard = () => {
     try {
       if (isEditing) {
         await updateTodo(editingId, { title, description });
-        showMessage("✅ Todo updated successfully!");
+        showMessage(" Todo updated successfully!");
       } else {
         await createTodo({
           title,
@@ -72,7 +72,7 @@ const TodoCard = () => {
       setEditingId(null);
       fetchTodos();
     } catch (err) {
-      showMessage("❌ Error saving todo", "error");
+      showMessage(" Error saving todo", "error");
       console.error(err.message);
     }
   };
@@ -83,7 +83,7 @@ const TodoCard = () => {
       const res = await getAllTodos(userId);
       setTodos(res.data?.todos || []);
     } catch (err) {
-      showMessage("❌ Failed to fetch todos", "error");
+      showMessage(" Failed to fetch todos", "error");
       console.error(err.message);
     } finally {
       setLoading(false);
@@ -103,10 +103,10 @@ const TodoCard = () => {
   const handleDelete = async () => {
     try {
       await deleteTodo(confirmDeleteDialog.id);
-      showMessage("🗑️ Todo deleted!");
+      showMessage(" Todo deleted!");
       fetchTodos();
     } catch (err) {
-      showMessage("❌ Delete failed", "error");
+      showMessage(" Delete failed", "error");
       console.error(err.message);
     } finally {
       setConfirmDeleteDialog({ open: false, id: null });
@@ -120,10 +120,10 @@ const TodoCard = () => {
         description: todo.description,
         isCompleted: !todo.isCompleted,
       });
-      showMessage("🔁 Todo status updated");
+      showMessage(" Todo status updated");
       fetchTodos();
     } catch (err) {
-      showMessage("❌ Failed to update status", "error");
+      showMessage(" Failed to update status", "error");
       console.error(err.message);
     }
   };
@@ -134,7 +134,7 @@ const TodoCard = () => {
   return (
     <div className="bg-gradient-to-br from-pink-100 via-white to-cyan-100 p-6 rounded-xl shadow-2xl max-w-4xl mx-auto">
       <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
-        🎯 Your Todo List
+        Your Todo List
       </h2>
 
       <form
@@ -172,7 +172,7 @@ const TodoCard = () => {
           type="submit"
           className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded shadow-sm"
         >
-          {isEditing ? "Update Todo ✏️" : "Add Todo ➕"}
+          {isEditing ? "Update Todo ✏️" : "Add Todo "}
         </button>
       </form>
 
@@ -184,7 +184,7 @@ const TodoCard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <section className="bg-white p-4 rounded-xl shadow">
             <h3 className="text-pink-700 text-lg font-bold mb-3">
-              📌 Incomplete Tasks
+               Incomplete Tasks
             </h3>
             {incompleteTodos.length === 0 ? (
               <p className="text-sm text-gray-500">No pending tasks 🎉</p>
@@ -229,7 +229,7 @@ const TodoCard = () => {
 
           <section className="bg-white p-4 rounded-xl shadow">
             <h3 className="text-green-700 text-lg font-bold mb-3">
-              ✅ Completed Tasks
+               Completed Tasks
             </h3>
             {completedTodos.length === 0 ? (
               <p className="text-sm text-gray-500">
@@ -346,7 +346,7 @@ const TodoCard = () => {
               px: 3,
             }}
           >
-            🗑️ Delete
+             Delete
           </Button>
         </DialogActions>
       </Dialog>
