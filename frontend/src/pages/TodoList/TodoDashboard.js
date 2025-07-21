@@ -8,21 +8,51 @@ const Dashboard = () => {
   const data = JSON.parse(localStorage.getItem("todoapp"));
   const user = data?.user;
 
-  // ✅ Redirect if not logged in
+
   useEffect(() => {
     if (!user) {
       toast.error("You must be logged in!");
-      navigate("/"); // or navigate("/login");
+      navigate("/"); 
     }
   }, [user, navigate]);
 
-  // ✅ Optional: guard render
+    useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (!window.performance?.navigation?.type || window.performance.navigation.type !== 1) {
+        // Not a refresh
+        localStorage.removeItem("todoapp");
+      }
+    };
+
+    const handlePopState = () => {
+      
+      localStorage.removeItem("todoapp");
+      toast.error("Logged out due to navigation!");
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        localStorage.removeItem("todoapp");
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("popstate", handlePopState);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("popstate", handlePopState);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
   if (!user) return null;
 
   const handleLogout = () => {
     localStorage.removeItem("todoapp");
     toast.success("Logged out successfully!");
-    navigate("/login");
+    navigate("/");
   };
 
   return (
@@ -30,7 +60,7 @@ const Dashboard = () => {
       {/* Navbar */}
       <nav className="bg-gray-100 py-6 shadow-sm">
         <div className="main-container flex justify-between items-center">
-          <Link to="/" className="text-xl font-bold text-blue-600">
+          <Link to="#" className="text-xl font-bold text-blue-600">
             MY TODO APP
           </Link>
 

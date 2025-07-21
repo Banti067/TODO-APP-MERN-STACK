@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Hero from "../../assets/hero.jpg"; // adjust path if needed
+import Hero from "../../assets/hero.jpg"; 
 
 const Landing = () => {
   return (

@@ -1,5 +1,5 @@
 // src/productServices/TodoServices.js
-import axios from "../utils/axiosConfig"; // ✅ Use the configured instance
+import axios from "../utils/axiosConfig"; 
 
 export const createTodo = (data) => {
   return axios.post("/todo/create", data);

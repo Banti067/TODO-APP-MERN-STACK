@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthServices from "../../productServices/AuthSerives";
 import { getErrorMessage } from "../../utils/ErrorMessage";
-import BounceDialog from "../../components/BounceDialog"; // Update path as needed
+import BounceDialog from "../../components/BounceDialog";
 
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [loading, setLoading] = useState(false); 
   const [popup, setPopup] = useState({
     open: false,
     isSuccess: false,
@@ -18,6 +19,7 @@ const Register = () => {
 
   const registerHandler = async (e) => {
     e.preventDefault();
+    setLoading(true); 
     try {
       const data = { email, password, username };
       const res = await AuthServices.registerUser(data);
@@ -36,6 +38,8 @@ const Register = () => {
           ? "User already exists. Try a different email."
           : getErrorMessage(err),
       });
+    } finally {
+      setLoading(false); 
     }
   };
 
@@ -46,8 +50,7 @@ const Register = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] px-4 py-12">
-
-      {/* ✅ Animated Bounce Popup */}
+      {/* ✅ Popup */}
       <BounceDialog
         open={popup.open}
         onClose={handlePopupClose}
@@ -95,9 +98,36 @@ const Register = () => {
 
         <button
           type="submit"
-          className="w-full py-3 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold rounded-xl transition"
+          className="w-full py-3 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold rounded-xl transition flex items-center justify-center"
+          disabled={loading}
         >
-          REGISTER
+          {loading ? (
+            <>
+              <svg
+                className="animate-spin h-5 w-5 mr-2 text-black"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v8H4z"
+                />
+              </svg>
+              Registering...
+            </>
+          ) : (
+            "REGISTER"
+          )}
         </button>
 
         <p className="text-center text-sm mt-2">
